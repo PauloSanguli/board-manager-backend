@@ -20,9 +20,14 @@ from sqlalchemy import (
     BOOLEAN
 )
 
+from dotenv import load_dotenv
+
+import os
 
 
-engine = create_engine("mysql+pymysql://root@localhost/board_manager")
+
+load_dotenv()
+engine = create_engine(os.getenv("DATABASE_URI"))
 Base = MetaData()
 
 admin = Table(

@@ -2,8 +2,10 @@ annotated-types==0.6.0
 anyio==4.2.0
 aspose-ocr-python-net==24.3.0
 bcrypt==4.1.2
+cffi==1.16.0
 click==8.1.7
 colorama==0.4.6
+cryptography==42.0.5
 dnspython==2.5.0
 dotenv==0.0.5
 email-validator==2.1.0.post1
@@ -12,11 +14,12 @@ fastapi==0.108.0
 greenlet==3.0.3
 h11==0.14.0
 idna==3.6
-jose==1.0.0
 packaging==24.0
 pillow==10.2.0
+pycparser==2.22
 pydantic==2.5.3
 pydantic_core==2.14.6
+pydotenv==0.0.7
 PyMySQL==1.1.0
 pytesseract==0.3.10
 python-multipart==0.0.9
