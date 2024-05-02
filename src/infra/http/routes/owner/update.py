@@ -10,7 +10,7 @@ from .....domain.entities.identity_card import IdentityCardProps
 
 
 
-update_router = APIRouter(prefix="/board-manager",tags=["owner"])
+update_router = APIRouter(prefix="/board-manager",tags=["admin"])
 
 @update_router.patch("/owner/identity_card/{id}")
 def update_identity_card(doc: IdentityCardProps, id: int):

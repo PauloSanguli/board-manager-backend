@@ -9,7 +9,7 @@ from ...repositories.owner_repository import OwnerRepository
 
 
 
-api = APIRouter(prefix="/board-manager", tags=["owner"])
+api = APIRouter(prefix="/board-manager", tags=["admin"])
 
 
 @api.post("/owner")

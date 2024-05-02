@@ -31,26 +31,16 @@ def regist_infraction(account_logged: Annotated[
         status_code=status.HTTP_201_CREATED
     )
 
-@router_post.post("/veichle")
-async def create_veichle(Veichle: VeichleProps):
-    resullt = VeichleRepository.create(Veichle)
-    return JSONResponse(
-        status_code=status.HTTP_201_CREATED,
-        content=jsonable_encoder({
-            "msg": "veichle inserted"
-        })
-    )
-
-@router_post.post("/veichle/")
-async def get_veichle_by_image(account_logged: Annotated[
-    dict, Depends(JWTTokenExceptionHandler.get_user_logged)],image: UploadFile = File()):
-    path_image = f"{PATH}\\boards_temporarys\{image.filename}"
-    with open(path_image, "wb+") as fb:
-        """save image temporary"""
-        fb.write(image.file.read())
+# @router_post.post("/veichle/")
+# async def get_veichle_by_image(account_logged: Annotated[
+#     dict, Depends(JWTTokenExceptionHandler.get_user_logged)],image: UploadFile = File()):
+#     path_image = f"{PATH}\\boards_temporarys\{image.filename}"
+#     with open(path_image, "wb+") as fb:
+#         """save image temporary"""
+#         fb.write(image.file.read())
         
-    datas = VeichleRepository.get_datas_by_board_picture(path_image)
-    return JSONResponse(
-        status_code=status.HTTP_200_OK,
-        content=jsonable_encoder(datas)
-    )
+#     datas = VeichleRepository.get_datas_by_board_picture(path_image)
+#     return JSONResponse(
+#         status_code=status.HTTP_200_OK,
+#         content=jsonable_encoder(datas)
+#     )
