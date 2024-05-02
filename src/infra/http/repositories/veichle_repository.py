@@ -26,7 +26,10 @@ from src.filter.board import ProcessImage as processor
 
 from src.domain.entities.infractions import InfractionsMap
 
+from src.domain.validators.validator_board import validate_board
+
 from fastapi import HTTPException
+
 
 
 
@@ -35,44 +38,55 @@ class VeichleRepository(IVeichleRepository):
     """"""
     def create(veichle_model: VeichleProps):
         """insert veichle in database"""
+        if not validate_board(veichle_model.board):
+            raise HTTPException(
+                detail="invalid board",
+                status_code=400
+        )
 
-        __car_veichle_title_doc = CarVeichleTitleMap(veichle_model.car_veichle_title)
-        __blocket_doc = BlocketMap(veichle_model.blocket)
+        try:
+            __car_veichle_title_doc = CarVeichleTitleMap(veichle_model.car_veichle_title)
+            __blocket_doc = BlocketMap(veichle_model.blocket)
 
-        license_id = VeichleRepository.create_docs(veichle_model.license, license)
-        secure_id = VeichleRepository.create_docs(veichle_model.secure, secure)
-        inspection_id = VeichleRepository.create_docs(veichle_model.inspection, inspection)
+            license_id = VeichleRepository.create_docs(veichle_model.license, license)
+            secure_id = VeichleRepository.create_docs(veichle_model.secure, secure)
+            inspection_id = VeichleRepository.create_docs(veichle_model.inspection, inspection)
 
-        with Session(engine) as session:
-            car_veichle_title_id = VeichleRepository.\
-                create_docs_car(car_veichle_title, __car_veichle_title_doc.get_fields())
-            blocket_id = VeichleRepository.\
-                create_docs_car(blocket, __blocket_doc.get_fields())
-            
-            session.execute(veichle.insert(), {
-                "owner_id": veichle_model.owner_id,
-                "license_id": license_id,
-                "secure_id": secure_id,
-                "inspection_id": inspection_id,
-                "blocket_id": blocket_id,
-                "car_veichle_title_id": car_veichle_title_id,
-                "board": veichle_model.board
-            })
-            session.commit()
-        return "sucess..."
-            
-    
+            with Session(engine) as session:
+                car_veichle_title_id = VeichleRepository.\
+                    create_docs_car(car_veichle_title, __car_veichle_title_doc.get_fields())
+                blocket_id = VeichleRepository.\
+                    create_docs_car(blocket, __blocket_doc.get_fields())
+                
+                session.execute(veichle.insert(), {
+                    "owner_id": veichle_model.owner_id,
+                    "license_id": license_id,
+                    "secure_id": secure_id,
+                    "inspection_id": inspection_id,
+                    "blocket_id": blocket_id,
+                    "car_veichle_title_id": car_veichle_title_id,
+                    "board": veichle_model.board
+                })
+                session.commit()
+        except Exception as error:
+            print(error)            
+            raise HTTPException(
+                detail="error inserting veichle",
+                status_code=400
+            )
+        return "veichle inserted"
+        
     def create_docs(doc, model_):
         """create determinated doc"""
         with Session(engine) as session:
-            id = session.execute(model_.insert().returning(model_.c.id), {
+            session.execute(model_.insert(), {
                 "expiration_date": doc.expiration_date,
                 "cod": doc.cod
-            }).fetchone()[0]
+            })#.fetchone()[0]
             session.commit()
-        return id
-            # query = select(model_.c.id).where(and_(model_.c.cod==doc.cod))
-            # return session.execute(query).fetchone()[0]
+        # return id
+        query = select(model_.c.id).where(and_(model_.c.cod==doc.cod))
+        return session.execute(query).fetchone()[0]
 
     def create_docs_car(model, dic):
         """create the car veichle title and blocket"""

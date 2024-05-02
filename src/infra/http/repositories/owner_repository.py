@@ -6,7 +6,7 @@ from fastapi import HTTPException
 from ..responses.owner_responses import Responses
 
 from ...models import (
-    owner as owner_table, engine, identity_card, driving_license
+    owner as owner_table, engine, identity_card, driving_license, veichle
 )
 from sqlalchemy.orm import Session
 from sqlalchemy import select, and_
@@ -113,7 +113,7 @@ class OwnerRepository(IOwnerRepository):
             datas = session.execute(query).fetchone()[0]
         return datas
     
-    def get_driving_license(ticket_number: str):
+    def get_driving_license(board: str):
         """get driving license of an owner by ticket number"""
         with Session(engine) as session:
             query = select(
@@ -126,13 +126,14 @@ class OwnerRepository(IOwnerRepository):
                     driving_license.c.document_issuer_signature,
                     driving_license.c.expired,
                 ).select_from(
-                driving_license.join(
-                    owner_table, driving_license.c.id==owner_table.c.driving_license_id
-                ).join(
-                    identity_card, owner_table.c.identity_card_id==identity_card.c.id
-                )
-            ).where(and_(identity_card.c.ticket_number==ticket_number))
+                    driving_license.join(
+                        owner_table, driving_license.c.id==owner_table.c.driving_license_id
+                    ).join(
+                        veichle, owner_table.c.id==veichle.c.owner_id
+                    )
+                ).where(and_(veichle.c.board==board))
             result = session.execute(query).fetchone()
+            print(result)
         if not result:
             raise HTTPException(
                 detail="driving license dont finded",

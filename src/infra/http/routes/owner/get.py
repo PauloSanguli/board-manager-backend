@@ -36,11 +36,11 @@ def get_owner_by_id(account_logged: Annotated[
         content=jsonable_encoder(result)
     )
 
-@router_get.get("/owner/driving_license/{ticket_number}/")
+@router_get.get("/owner/driving_license/{board_car}/")
 def get_driving_license_car(account_logged: Annotated[
-    dict, Depends(JWTTokenExceptionHandler.get_user_logged)],ticket_number: str):
+    dict, Depends(JWTTokenExceptionHandler.get_user_logged)],board_car: str):
     
-    response = OwnerRepository.get_driving_license(ticket_number)
+    response = OwnerRepository.get_driving_license(board_car)
 
     return JSONResponse(
         status_code=status.HTTP_200_OK,

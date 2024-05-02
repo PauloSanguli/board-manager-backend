@@ -15,6 +15,7 @@ from src.infra.http.routes.veichle.put import router_put
 
 from src.infra.http.routes.agent.post import router_post_agent
 from src.infra.http.routes.agent.login import router_login
+from src.infra.http.routes.agent.get import agent_get
 
 from src.infra.models import *
 
@@ -33,6 +34,7 @@ app.include_router(router_pacth)
 app.include_router(veichle_get)
 app.include_router(router_post_agent)
 app.include_router(router_login)
+app.include_router(agent_get)
 
 app.add_middleware(
     CORSMiddleware,
@@ -49,7 +51,6 @@ async def hello():
     }
 
 if __name__ == "__main__":
-
     uvicorn.run(app, 
         host="0.0.0.0",
         port=1818
