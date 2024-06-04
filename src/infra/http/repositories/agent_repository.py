@@ -46,6 +46,7 @@ class AccountRepository(ITrafficAgentRepository):
                     traffic_agent.c.id
                 ).where(and_(traffic_agent.c.email==modelAgent.email))
             ).fetchone()
+            print(agentLog, modelAgent.email)
         
         if agentLog:
             STATUS_CHECK_PASSWORD = PasswordSecure.check(modelAgent.password, agentLog[0])

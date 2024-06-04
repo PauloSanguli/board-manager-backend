@@ -24,7 +24,8 @@ DRIVING_LICENSE_FIELDS = [
     "restrictions",
     "veichle_identification_number",
     "document_issuer_signature",
-    "expired"
+    "expired",
+    "num"
 ]
 
 DOCS_FIELDS = [

@@ -7,7 +7,9 @@ from ...models import (
     secure,
     inspection,
     license,
-    infractions
+    infractions,
+    identity_card,
+    driving_license,
 )
 from sqlalchemy.orm import Session
 from sqlalchemy import select, and_
@@ -75,6 +77,32 @@ class VeichleRepository(IVeichleRepository):
                 status_code=400
             )
         return "veichle inserted"
+    
+    def get_infractions_by_num(num: int):
+        """get the infractions from num driving license"""
+        with Session(engine) as session:
+            query = select(
+                infractions.c.num_carter_habilitacion,
+                infractions.c.obs,
+                infractions.c.date,
+                infractions.c.local,
+                infractions.c.time,
+                infractions.c.type_infraction,
+                infractions.c.value,
+                infractions.c.info_payment,
+                infractions.c.paid,
+                infractions.c.id
+            ).select_from(
+                infractions.join(
+                    owner, infractions.c.identity_card_id==owner.c.identity_card_id
+                ).join(
+                    driving_license, owner.c.driving_license_id==driving_license.c.id
+                )
+            ).where(and_(driving_license.c.num==num))
+        result = session.execute(query).fetchall()
+        return Responses.get_infractions(result)
+
+        
         
     def create_docs(doc, model_):
         """create determinated doc"""

@@ -15,6 +15,7 @@ class DrivingLicenseProps(BaseModel):
     veichle_identification_number: int
     document_issuer_signature: str
     expired: bool
+    num: int = 0
 
 
 

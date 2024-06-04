@@ -59,6 +59,7 @@ class Responses:
             restrictions=datas[4],
             veichle_identification_number=datas[5],
             document_issuer_signature=datas[6],
-            expired=datas[7]
+            expired=datas[7],
+            num=datas[8]
         ).model_dump()
         return response

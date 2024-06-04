@@ -39,3 +39,14 @@ async def get_infractions(account_logged: Annotated[
         content=jsonable_encoder(datas),
         status_code=status.HTTP_200_OK
     )
+
+@veichle_get.get("/infractions/{num_driving_license}/")
+async def get_infractions(account_logged: Annotated[
+    dict, Depends(JWTTokenExceptionHandler.get_user_logged)],
+    num_driving_license: int):
+    datas = VeichleRepository.get_infractions_by_num(num_driving_license)
+    
+    return JSONResponse(
+        content=jsonable_encoder(datas),
+        status_code=status.HTTP_200_OK
+    )

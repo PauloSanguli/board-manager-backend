@@ -113,7 +113,7 @@ class OwnerRepository(IOwnerRepository):
             datas = session.execute(query).fetchone()[0]
         return datas
     
-    def get_driving_license(board: str):
+    def get_driving_license(num_driving_license: int):
         """get driving license of an owner by ticket number"""
         with Session(engine) as session:
             query = select(
@@ -125,13 +125,8 @@ class OwnerRepository(IOwnerRepository):
                     driving_license.c.veichle_identification_number,
                     driving_license.c.document_issuer_signature,
                     driving_license.c.expired,
-                ).select_from(
-                    driving_license.join(
-                        owner_table, driving_license.c.id==owner_table.c.driving_license_id
-                    ).join(
-                        veichle, owner_table.c.id==veichle.c.owner_id
-                    )
-                ).where(and_(veichle.c.board==board))
+                    driving_license.c.num
+                ).where(and_(driving_license.c.num==num_driving_license))
             result = session.execute(query).fetchone()
             print(result)
         if not result:
